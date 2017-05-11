@@ -287,15 +287,27 @@ def statsAboutImage():
         totalBox.ix[imageID][userID] += 1
         totalArea.ix[imageID][userID] += area 
     
-    return totalBox,totalArea
+    #return totalBox,totalArea
+    optimalUserIDForImage = pd.Series(index=imageIDSet)
+    for imageID in imageIDSet:
+        s = totalArea.ix[imageID]
+        sIndex = list(s.index)
+        sValue = list(s.values)
+        minIx = sValue.index(min(sValue))
+        sIndex.pop(minIx)
+        #leaving 2 users
+        s2 = totalBox.ix[imageID]
+        if s2[sIndex[0]] > s2[sIndex[1]]:
+            optimalUser = sIndex[0]
+        else:
+            optimalUser = sIndex[1]
+        optimalUserIDForImage[imageID] = optimalUser
+                             
+    return totalBox,totalArea,optimalUserIDForImage
     
     
     
-            
-        
 
-
-      
 
 if __name__ == '__main__': 
     label = pd.read_csv('labels.csv')
@@ -313,7 +325,7 @@ if __name__ == '__main__':
     
     num = raw_input("Select Image Num from 0 to %d:\n"%(len(imageIDSet)-1))
     num = int(num)
-    showImageWithNumK2(num)
+    #showImageWithNumK2(num)
     
     
     #statsAboutPerson()
