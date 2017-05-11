@@ -265,9 +265,29 @@ def statsAboutPerson():
     
     
     
+def statsAboutImage():
+    totalBox = pd.DataFrame(columns=['user1','user2','user3'],index=imageIDSet,data=0.0)
+    totalArea = pd.DataFrame(columns=['user1','user2','user3'],index=imageIDSet,data=0.0)
+    for index in range(label.shape[0]):
+        imageID = label.ix[index]['ImageID']
+        
+        userID = 'user1'
+        if label.ix[index]['Email'] == 'user1@cc.com':
+            userID = 'user1'
+        elif label.ix[index]['Email'] == 'user2@cc.com':
+            userID= 'user2'
+        elif label.ix[index]['Email'] == 'user3@cc.com':
+            userID = 'user3'
+        else:
+            pass
+        
+        pos = label.ix[index]['PointsJson']
+        pos = eval(pos)
+        area = abs(pos['topleft']['x']-pos['bottomright']['x'])*abs(pos['topleft']['y']-pos['bottomright']['y'])
+        totalBox.ix[imageID][userID] += 1
+        totalArea.ix[imageID][userID] += area 
     
-    
-    
+    return totalBox,totalArea
     
     
     
@@ -284,18 +304,20 @@ if __name__ == '__main__':
     userIDSet = set(label['UserID'])
     userIDList = list(label['UserID'])
     emailSet = set(label['Email'])
-    
+    '''
     userIDEmailSet = set()
     for i in range(label.shape[0]):
         userIDEmailSet.add((label.ix[i]['UserID'],label.ix[i]['Email']))
+    '''
     
-    '''  
+    
     num = raw_input("Select Image Num from 0 to %d:\n"%(len(imageIDSet)-1))
     num = int(num)
     showImageWithNumK2(num)
-    '''
     
-    statsAboutPerson()
+    
+    #statsAboutPerson()
+    #totalBox,totalArea = statsAboutImage()
     
     
     
